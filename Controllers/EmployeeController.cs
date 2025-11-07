@@ -41,14 +41,78 @@ namespace IBASEmployeeService.Controllers
                 Name = "Karsten Mikkelsen",
                 Email = "kami@ibas.dk",
                 Department = new Department() {
-                    Id = 2,
+                    Id = 3,
                     Name = "Support"
+                }
+            },
+            new Employee() {
+                Id = "24",
+                Name = "John Andersen",
+                Email = "joan@ibas.dk",
+                Department = new Department() {
+                    Id = 4,
+                    Name = "IT"
+                }
+            },
+            new Employee() {
+                Id = "25",
+                Name = "Hans Bennysen",
+                Email = "habe@ibas.dk",
+                Department = new Department() {
+                    Id = 5,
+                    Name = "IT"
+                }
+            },
+            new Employee() {
+                Id = "26",
+                Name = "Kim Larsen",
+                Email = "kila@ibas.dk",
+                Department = new Department() {
+                    Id = 6,
+                    Name = "IT"
+                }
+            },
+            new Employee() {
+                Id = "27",
+                Name = "Isabella Hansen",
+                Email = "isha@ibas.dk",
+                Department = new Department() {
+                    Id = 7,
+                    Name = "Kantine"
+                }
+            },
+            new Employee() {
+                Id = "28",
+                Name = "Isa Tagesen",
+                Email = "ista@ibas.dk",
+                Department = new Department() {
+                    Id = 8,
+                    Name = "Kantine"
                 }
             }
         };
             return employees;
         }
+        
+        [HttpGet("GetEmployeesByDepartment/{departmentName}")]
+        public ActionResult<IEnumerable<Employee>> GetEmployeesByDepartment(string departmentName)
+        {
+            // Kalder først din eksisterende Get()-metode for at få alle medarbejdere
+            var employees = Get();
+
+            // Finder alle der matcher afdelingens navn (fx "IT")
+            var result = employees
+                .Where(e => e.Department.Name.Equals(departmentName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            // Hvis der ikke findes nogen, returnér en 404-fejl
+            if (result.Count == 0)
+            {
+                return NotFound($"Ingen ansatte fundet i afdelingen '{departmentName}'.");
+            }
+
+            // Ellers returnér listen med ansatte
+            return Ok(result);
+        }
     }
-
-
 }
